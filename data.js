@@ -15,13 +15,13 @@ var Connections_Dic = new Array();
 //path_instruction_dic0['D_C'] = 'Take the stairs upstairs to the upper floor.'
 
 
-//var path_instruction_dic1 = new Array(); 
-//path_instruction_dic1['A_B'] = 'Go straight along the aisle and turn left at the corner.'
-//path_instruction_dic1['B_C'] = 'Go straight along the aisle until you reach the glass aisle.'
-//path_instruction_dic1['C_D'] = 'Take the stairs down to the next floor.'
-//path_instruction_dic1['C_B'] = 'Go straight along the aisle and turn right when you reach the corner.'
-//path_instruction_dic1['B_A'] = 'Keep walking until you see the rest table.'
-//path_instruction_dic1['D_C'] = 'Take the stairs upstairs to the upper floor.'
+var path_instruction_dic1 = new Array(); 
+path_instruction_dic1['A_B'] = 'Go straight along the aisle and turn left at the corner.'
+path_instruction_dic1['B_C'] = 'Go straight along the aisle until you reach the glass aisle.'
+path_instruction_dic1['C_D'] = 'Take the stairs down to the next floor.'
+path_instruction_dic1['C_B'] = 'Go straight along the aisle and turn right when you reach the corner.'
+path_instruction_dic1['B_A'] = 'Keep walking until you see the rest table.'
+path_instruction_dic1['D_C'] = 'Take the stairs upstairs to the upper floor.'
 
 var path_instruction_dic0 = new Array(); 
 path_instruction_dic0['Entrance1_StudentServices'] = 'Entrance1_Student Services.'
@@ -73,12 +73,12 @@ path_instruction_dic0['FirstFloor2_Entrance2'] = 'First Floor2_Entrance2.'
 //        ];
 
 
-//var connection1 = [
-//            ['A', [['B', 20]] ], 
-//            ['B', [['A', 20]] ], 
-//            ['C', [['D', 10] ] ], 
-//            ['D', [['C', 10] ]]
-//       ];
+var connection1 = [
+            ['A', [['B', 20]] ], 
+            ['B', [['A', 20]] ], 
+            ['C', [['D', 10] ] ], 
+            ['D', [['C', 10] ]]
+       ];
         
 var connection0 = [
             ['Entrance1', [['StudentServices', 5], ['ChangingRoom1', 20], ['FirstFloor1',30]] ], 
@@ -102,11 +102,11 @@ var connection0 = [
 
 
 Instructions_Dic[0] = path_instruction_dic0;
-//Instructions_Dic[1] = path_instruction_dic1;
+Instructions_Dic[1] = path_instruction_dic1;
 //Instructions_Dic[2] = path_instruction_dic3;
 
 
 
 Connections_Dic[0] = connection0;
-//Connections_Dic[1] = connection1;
+Connections_Dic[1] = connection1;
 //Connections_Dic[2] = connection2;
