@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>demo.html</title>
+    <script type="text/javascript" src="http://d3js.org/d3.v5.min.js"></script>
+	<meta name="description" content="this is my page">
+	<meta name="content-type" content="text/html; charset=utf-8">
+	<meta charset="utf-8">
+  </head>
+  <body>
+  <!-- Graphs will be draw in the svg elements, so create a svg element in the body-->
+	<svg width="960" height="600"></svg>
+ <script>
+			
+    	var marge = {top:60,bottom:60,left:60,right:60}
+    	var svg = d3.select("svg")    //select svg element in the body
+    	var width = svg.attr("width")  //get the width of canvas
+    	var height = svg.attr("height")   //get the height of canvas
+    	var g = svg.append("g").attr("transform","translate("+marge.top+","+marge.left+")");
+    	
+		
+		var nodes=[ {name:"a"},
+				    {name:"b"},
+				    {name:"c"},
+			  	    {name:"d"},
+			  	   //  {name:"red"},
+			 	    // {name:"yellow"},
+		];
+
+                //        [
+                //     ['A', [['B', 20], ['C', 50]] ], 
+                //     ['B', [['A', 30], ['C', 100]] ], 
+                //     ['C', [['D', 10], ['A', 30]] ], 
+                //     ['D', [['C', 10], ['B', 40]] ]
+                // ]
+
+		//data of edges，id is the element index in the nodes array
+		var edges=[ {source:0,target:1},
+					{source:0,target:2},
+                    {source:1,target:1},
+                    {source:1,target:2},
+                    {source:2,target:3},
+                    {source:2,target:0},
+                    {source:3,target:2},
+					{source:3,target:1},
+					// {source:0,target:4},
+					// {source:0,target:5},
+					// {source:1,target:0},
+					// {source:1,target:2},
+					// {source:1,target:3},
+					// {source:1,target:4},
+					// {source:1,target:5},
+					// {source:2,target:0},
+		];
+
+    	//Set different colors for different nodes
+    	var colorScale = d3.scaleOrdinal()
+    		.domain(d3.range(nodes.length))
+    		.range(d3.schemeCategory10);
+    		
+    	//create a force simulation
+    	var forceSimulation = d3.forceSimulation()
+    		.force("link",d3.forceLink())
+    		.force("charge",d3.forceManyBody())
+    		.force("center",d3.forceCenter());
+
+    	
+    	forceSimulation.nodes(nodes).on("tick",ticked);////The on() method is used to bind a time listener and the tick event is something that a force simulation does every once in a while
+
+    	
+    	forceSimulation.force("link")
+    		.links(edges)
+    		.distance(function(d)
+			{   //the length of edges
+				return Math.ceil((Math.random()+2)*100);
+    		})    	
+
+    	//Sets the center position of the graph	
+    	forceSimulation.force("center").x(width/3).y(height/3);	
+
+    	//Draw edges
+    	var links = g.append("g")
+    		.selectAll("line")   //select all of "line" elements
+    		.data(edges)   //bind egdes to the selected elements: line
+    		.enter()
+    		.append("line")
+    		.attr("stroke",function(d,i)
+			{
+    			return colorScale(i);  //the color of edges
+    		})
+    		.attr("stroke-width",1);   
+
+		//add text for edges
+    	var linksText = g.append("g")
+    		.selectAll("text")
+    		.data(edges)   
+    		.enter()
+    		.append("text")
+    		.text(function(d)
+			{
+				return "";  //What is returned here determines the text displayed on each edge
+    		})
+
+    	//Draw nodes
+    	var gs = g.selectAll(".circleText")
+    		.data(nodes)
+    		.enter()
+    		.append("g")
+    		.attr("transform",function(d,i){
+    			var cirX = d.x;
+    			var cirY = d.y;
+    			return "translate("+cirX+","+cirY+")";
+    		})
+    		.call(d3.drag()  //Drag is the mouse drag event and Start is the event that occurs when the left mouse button is pressed.
+                             //Drag means to drag an event.
+                             //Ended is a mouse-end click event.
+    			.on("start",started)  
+    			.on("drag",dragged)
+    			.on("end",ended)
+    		);	
+
+    	
+    	gs.append("circle")
+    		.attr("r",10)   //每个顶点的大小
+    		.attr("fill",function(d,i)
+			{
+    			return d3.rgb(d.name);  //颜色
+    		})
+
+    	//add text for nodes
+    	gs.append("text")
+    		.attr("x",-10)
+    		.attr("y",-20)
+    		.attr("dy",10)
+    		.text(function(d)
+			{
+    			return d.name;
+    		})
+		
+		//Arrow with directed graph edge
+		var marker=	svg.append("marker")
+						.attr("id", "resolved")
+						.attr("markerUnits","userSpaceOnUse")
+						.attr("viewBox", "0 -5 10 10")
+						.attr("refX",26)
+						.attr("refY", 0)
+						.attr("markerWidth", 6)//size of arrow
+						.attr("markerHeight", 6)  
+						.attr("orient", "auto")
+						.attr("stroke-width",2)//width of arrow
+						.append("path")
+						.attr("d", "M0,-5L10,0L0,5")
+						.attr('fill','#000000');//colors of arrow
+
+
+    	function ticked()
+		{
+    		links
+    			.attr("x1",function(d){return d.source.x;})
+    			.attr("y1",function(d){return d.source.y;})
+    			.attr("x2",function(d){return d.target.x;})
+    			.attr("y2",function(d){return d.target.y;})
+				.attr("marker-end", "url(#resolved)");
+
+    		linksText
+    			.attr("x",function(d)
+				{
+    				return (d.source.x+d.target.x)/2;
+
+    			})
+    			.attr("y",function(d)
+				{
+    				return (d.source.y+d.target.y)/2;
+    			});
+
+    		gs.attr("transform",function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    	}
+
+    	function started(d)
+		{
+    		if(!d3.event.active)
+			{
+    			forceSimulation.alphaTarget(0.8).restart();
+    		}
+    		d.fx = d.x;
+    		d.fy = d.y;
+    	}
+
+    	function dragged(d)
+		{
+    		d.fx = d3.event.x;
+    		d.fy = d3.event.y;
+    	}
+
+    	function ended(d)
+		{
+    		if(!d3.event.active)
+			{
+    			forceSimulation.alphaTarget(0);
+				
+    		}
+    		d.fx = null;
+    		d.fy = null;
+    	}
+
+    </script>
+
+  </body>
+
+</html>
