@@ -64,6 +64,12 @@ path_instruction_dic1['StudentServices_MedicalSuites'] = 'StudentService_Medical
 path_instruction_dic1['ChangingRoom1_Entrance1'] = 'ChangingRoom1_Entrance1'
 path_instruction_dic1['MedicalSuites_StudentServices'] = 'MedicalSuits_StudentService.'
 
+var path_instruction_dic2 = new Array(); 
+path_instruction_dic2['Entrance1_ChangingRoom1'] = 'Entrance1_ChangingRoom1.'
+path_instruction_dic2['StudentServices_MedicalSuites'] = 'StudentService_MedicalSuits'
+path_instruction_dic2['ChangingRoom1_Entrance1'] = 'ChangingRoom1_Entrance1'
+path_instruction_dic2['MedicalSuites_StudentServices'] = 'MedicalSuits_StudentService.'
+
 
 //var connection0 = [
 //            ['A', [['B', 20], ['D', 150]] ], 
@@ -101,12 +107,18 @@ var connection1 = [
             ['MedicalSuites', [['StudentServices', 10]]]
        ];
 
+var connection2 = [
+            ['Entrance1', [['ChangingRoom1', 20]] ], 
+            ['StudentServices', [['MedicalSuites', 20]] ], 
+            ['ChangingRoom1', [['Entrance1', 10]] ], 
+            ['MedicalSuites', [['StudentServices', 10]]]
+       ];
 Instructions_Dic[0] = path_instruction_dic0;
 Instructions_Dic[1] = path_instruction_dic1;
-//Instructions_Dic[2] = path_instruction_dic3;
+Instructions_Dic[2] = path_instruction_dic3;
 
 
 
 Connections_Dic[0] = connection0;
 Connections_Dic[1] = connection1;
-//Connections_Dic[2] = connection2;
+Connections_Dic[2] = connection2;
